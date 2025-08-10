@@ -10,7 +10,10 @@ const {
 const router = express.Router();
 
 
+router.post("/", protect, createAvailability);
 router.get("/", protect, getMyAvailability);
+router.put("/:id", protect, updateAvailability);
+router.delete("/:id", protect, deleteAvailability);
 
 
 module.exports = router;
