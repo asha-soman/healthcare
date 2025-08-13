@@ -76,9 +76,29 @@ const deleteAvailability = async (req, res) => {
   }
 };
 
+const getOpenAvailability = async (req, res) => {
+  try {
+    const { doctorId, dayOfWeek } = req.query;
+    const q = {};
+    if (doctorId)  q.user = doctorId;
+    if (dayOfWeek) q.dayOfWeek = dayOfWeek;
+
+    // Return all slots with doctor user populated; App will filter out already-booked via appointment check
+    const slots = await Availability.find(q)
+      .sort({ dayOfWeek: 1, startTime: 1 })
+      .populate({ path: "user", select: "_id name email role" });
+
+    res.json(slots);
+  } catch (err) {
+    console.error("Failed to fetch open availability", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   createAvailability,
   getMyAvailability,
   updateAvailability,
   deleteAvailability,
+  getOpenAvailability,
 };
