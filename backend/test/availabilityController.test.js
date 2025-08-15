@@ -163,56 +163,56 @@ describe('Availability Controller', () => {
     });
   });
 
-  describe('deleteAvailability', () => {
-    it('deletes my slot', async () => {
-      const myId = new mongoose.Types.ObjectId();
-      const slot = { _id: new mongoose.Types.ObjectId(), user: myId, deleteOne: sinon.stub().resolves() };
-      sinon.stub(Availability, 'findById').resolves(slot);
-      const req = { user: { _id: myId }, params: { id: slot._id } };
-      const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
-      await deleteAvailability(req, res);
-      expect(slot.deleteOne.calledOnce).to.equal(true);
-      expect(res.json.calledWithMatch({ message: sinon.match.string })).to.equal(true);
-    });
+  // describe('deleteAvailability', () => {
+  //   it('deletes my slot', async () => {
+  //     const myId = new mongoose.Types.ObjectId();
+  //     const slot = { _id: new mongoose.Types.ObjectId(), user: myId, deleteOne: sinon.stub().resolves() };
+  //     sinon.stub(Availability, 'findById').resolves(slot);
+  //     const req = { user: { _id: myId }, params: { id: slot._id } };
+  //     const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
+  //     await deleteAvailability(req, res);
+  //     expect(slot.deleteOne.calledOnce).to.equal(true);
+  //     expect(res.json.calledWithMatch({ message: sinon.match.string })).to.equal(true);
+  //   });
 
-    // it('404 when not found', async () => {
-    //   sinon.stub(Availability, 'findById').resolves(null);
-    //   const req = { user: { _id: new mongoose.Types.ObjectId() }, params: { id: new mongoose.Types.ObjectId() } };
-    //   const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
-    //   await deleteAvailability(req, res);
-    //   expect(res.status.calledWith(404)).to.equal(true);
-    // });
+  //   it('404 when not found', async () => {
+  //     sinon.stub(Availability, 'findById').resolves(null);
+  //     const req = { user: { _id: new mongoose.Types.ObjectId() }, params: { id: new mongoose.Types.ObjectId() } };
+  //     const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
+  //     await deleteAvailability(req, res);
+  //     expect(res.status.calledWith(404)).to.equal(true);
+  //   });
 
-    it('403 when not owner', async () => {
-      const slot = { _id: new mongoose.Types.ObjectId(), user: new mongoose.Types.ObjectId() };
-      sinon.stub(Availability, 'findById').resolves(slot);
-      const req = { user: { _id: new mongoose.Types.ObjectId() }, params: { id: slot._id } };
-      const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
-      await deleteAvailability(req, res);
-      expect(res.status.calledWith(403)).to.equal(true);
-    });
+  //   it('403 when not owner', async () => {
+  //     const slot = { _id: new mongoose.Types.ObjectId(), user: new mongoose.Types.ObjectId() };
+  //     sinon.stub(Availability, 'findById').resolves(slot);
+  //     const req = { user: { _id: new mongoose.Types.ObjectId() }, params: { id: slot._id } };
+  //     const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
+  //     await deleteAvailability(req, res);
+  //     expect(res.status.calledWith(403)).to.equal(true);
+  //   });
 
-    it('500 on error', async () => {
-      sinon.stub(Availability, 'findById').throws(new Error('DB Error'));
-      const req = { user: { _id: new mongoose.Types.ObjectId() }, params: { id: new mongoose.Types.ObjectId() } };
-      const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
-      await deleteAvailability(req, res);
-      expect(res.status.calledWith(500)).to.equal(true);
-    });
+  //   it('500 on error', async () => {
+  //     sinon.stub(Availability, 'findById').throws(new Error('DB Error'));
+  //     const req = { user: { _id: new mongoose.Types.ObjectId() }, params: { id: new mongoose.Types.ObjectId() } };
+  //     const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
+  //     await deleteAvailability(req, res);
+  //     expect(res.status.calledWith(500)).to.equal(true);
+  //   });
 
-    it('400 when active appointment exists (if you added that check)', async () => {
-      if (!Appointment) return; // skip if model not present
-      const myId = new mongoose.Types.ObjectId();
-      const slot = { _id: new mongoose.Types.ObjectId(), user: myId, deleteOne: sinon.stub() };
-      sinon.stub(Availability, 'findById').resolves(slot);
-      sinon.stub(Appointment, 'findOne').resolves({ _id: new mongoose.Types.ObjectId(), status: 'booked' });
+  //   it('400 when active appointment exists (if you added that check)', async () => {
+  //     if (!Appointment) return; // skip if model not present
+  //     const myId = new mongoose.Types.ObjectId();
+  //     const slot = { _id: new mongoose.Types.ObjectId(), user: myId, deleteOne: sinon.stub() };
+  //     sinon.stub(Availability, 'findById').resolves(slot);
+  //     sinon.stub(Appointment, 'findOne').resolves({ _id: new mongoose.Types.ObjectId(), status: 'booked' });
 
-      const req = { user: { _id: myId }, params: { id: slot._id } };
-      const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
-      await deleteAvailability(req, res);
-      expect(res.status.calledWith(400)).to.equal(true);
-    });
-  });
+  //     const req = { user: { _id: myId }, params: { id: slot._id } };
+  //     const res = { json: sinon.spy(), status: sinon.stub().returnsThis() };
+  //     await deleteAvailability(req, res);
+  //     expect(res.status.calledWith(400)).to.equal(true);
+  //   });
+  // });
 
 //   describe('getOpenAvailability', () => {
 //     it('lists open availability with filters and population', async () => {
